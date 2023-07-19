@@ -89,11 +89,11 @@ function makeItem(campus, type, name, id, approval) { // Add the job's informati
 		return;
 	}
 	if (campus == secondaryCampus && type == collectionName) {
-		senCollectionData += `<div class='grid-item'>${name} (${id}) ${icon}</div>`;
+		senCollectionData += `<div class='grid-item'>${name} (${id})</div>`;
 		return;
 	}
 	if (campus == primaryCampus && type == approvalName) {
-		midApprovalData += `<div class='grid-item'>${name} (${id})</div>`;
+		midApprovalData += `<div class='grid-item'>${name} (${id}) ${icon}</div>`;
 		return;
 	}
 	if (campus == secondaryCampus && type == approvalName) {

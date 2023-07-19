@@ -83,7 +83,7 @@ function makeItem(type, name, id, approval) { // Add the job's information to th
 
 	// Check the site and status and then add to the data to that list as a div in html format
 	if (type == collectionName) {
-		CollectionData += `<div class='grid-item'>${name} (${id}) ${icon}</div>`;
+		CollectionData += `<div class='grid-item'>${name} (${id})</div>`;
 		return;
 	}
 
