@@ -27,6 +27,15 @@ html {
 	margin: .5% 0% 1.1%;
 }
 
+.grid-list {
+	min-height: 3.5rem;
+	display: grid;
+	grid-gap: 10% 0.5%;
+	grid-template-columns: 100%;
+	margin: .5% 0%;
+	overflow: hidden;
+}
+
 .grid-item {
     font-size: 2rem;
 	vertical-align: middle;
@@ -59,6 +68,27 @@ html {
     display: block;
     text-align: right;
     padding: 1rem 1rem;
+}
+
+input[type=text] {
+	float: right;
+	padding: 0.5rem;
+	margin: 0.5rem;
+	border: 1px solid #ccc;
+}
+
+input[type=submit] {
+	float: right;
+	padding: 0.5rem;
+	margin: 0.5rem;
+	border: 1px solid #ccc;
+	background-color: #0e284e;
+	color: white;
+	cursor: pointer;
+}
+
+input[type=submit]:hover {
+	background-color: #1e385e;
 }
 
 #clock {
@@ -100,3 +130,9 @@ html {
 		'GRAD' 0,
 		'opsz' 48
 }
+
+.clearfix::after {
+	content: "";
+	clear: both;
+	display: table;
+  }
