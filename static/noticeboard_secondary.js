@@ -43,26 +43,18 @@ function getData() {
 	setTimeout(getData,10000) // Do it all again in 10 seconds (this number is in milliseconds)
 }
 
-// Get the approval status of each job as this information is not provided when getting info on all jobs.
-async function getApproval(jobid) {
-	let response = await fetch(`get-approval/${jobid}`); // Get the job specific data
-	const data = await response.json(); // Arrange the response promise into a json data structure
-	if (data.request.approval_status != null) { // If the approval status is not "null" return the status otherwise return null
-		return data.request.approval_status.name;
-	}
-	else {
-		return null;
-	}
-}
-
 // Populate the tables with the data from getData()
 async function populate(data) {
-	await clearData(); // Clear the data so that each item isn't added several times
+	clearData(); // Clear the data so that each item isn't added several times
 	for (const item of data.requests) { // Loop through all of the jobs
-		const approvalData = await getApproval(item.id); // Get the approval status of the job
-		makeItem(item.site.name, item.status.name, item.requester.name, item.id, approvalData); // Send the data to be written into the correct grid
+		if (item.approval_status != null) {
+			makeItem(item.site.name, item.status.name, item.requester.name, item.id, item.approval_status.name); // Send the data to be written into the correct grid
+		}
+		else {
+			makeItem(item.site.name, item.status.name, item.requester.name, item.id, null); // Send the data to be written into the correct grid
+		}
 	}
-	await updateData(); // After the jobs are written (as html) to the variables, write them into the grid
+	updateData(); // After the jobs are written (as html) to the variables, write them into the grid
 }
 
 function makeItem(campus, type, name, id, approval) { // Add the job's information to the correct list
