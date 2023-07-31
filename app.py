@@ -1,22 +1,52 @@
 from flask import Flask, render_template # Flask libraries
+import os.path # Library for manipulating local files and folders
 import requests # Requests library for handling the API request
+import configparser # Library for writing and reading configuration files
 
 print('Content-Type: text/plain') # Headers for it to work
 
 app = Flask(__name__)
 
+config = configparser.ConfigParser()
+meKey = ''
+meUrl = ''
+
+def writeConfig():
+    config["INSTANCE"] = {
+        "Key": meKey,
+        "Url": meUrl
+    }
+    with open("config.ini", "w") as configfile:
+        config.write(configfile)
+
+def updateConfig():
+    config.set("INSTANCE", "Key", meKey)
+    config.set("INSTANCE", "Url", meUrl)
+    with open("config.ini", "w") as configfile:
+        config.write(configfile)
+
+def readConfig():
+    config.read("config.ini")
+    meKey = config.get("INSTANCE", "Key")
+    meUrl = config.get("INSTANCE", "Url")
+
+if not os.path.exists('config.ini'):
+    writeConfig()
+else:
+    readConfig()
+
 @app.route('/') # Entry point for default page
 def index():
-    return render_template('index.html') # Open the index.html file as a template (in this case it is just a fully formed site with no python changable data)
+    return render_template('index.html') # Open the index.html and render it as the requested page
 
-@app.route('/admin') # Entry point for default page
+@app.route('/admin') # Entry point for the admin/settings page
 def admin():
-    return render_template('admin.html') # Open the index.html file as a template (in this case it is just a fully formed site with no python changable data)
+    return render_template('admin.html') # Open the admin.html and render it as the requested page
 
 @app.route('/get-data') # Instructions for when the javascript calls this to start the API request process
 def get_data():
-    url = 'https://YOUR_HELPDESK_URL_HERE/api/v3/requests' # Helpdesk URL for API
-    headers = {"authtoken":"YOUR_API_TOKEN_HERE", "Content-Type":"text/html"} # Auth Token as a key value pair
+    url = f"https://{meUrl}/api/v3/requests" # Helpdesk URL for API
+    headers = {"authtoken":meKey, "Content-Type":"text/html"} # Auth Token as a key value pair
     # This requests the first 200 jobs orderd by most recent and returns any with status Collection or Leadership. 200 should be enough but can be increased if needed.
     input_data = '''{
         "list_info": {
@@ -58,7 +88,7 @@ def get_data():
 def secondary():
     return render_template('secondary.html') # Open the secondary.html file as a template (in this case it is just a fully formed site with no python changable data)
 
-@app.route('/settings', methods=['POST'])
+@app.route('/settings', methods=['POST']) #enty point for the settings form submission target
 def settings():
     return ('', 204)
 
