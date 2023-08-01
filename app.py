@@ -9,10 +9,6 @@ app = Flask(__name__)
 def index():
     return render_template('index.html') # Open the index.html file as a template (in this case it is just a fully formed site with no python changable data)
 
-@app.route('/admin') # Entry point for default page
-def admin():
-    return render_template('admin.html') # Open the index.html file as a template (in this case it is just a fully formed site with no python changable data)
-
 @app.route('/get-data') # Instructions for when the javascript calls this to start the API request process
 def get_data():
     url = 'https://YOUR_HELPDESK_URL_HERE/api/v3/requests' # Helpdesk URL for API
@@ -57,10 +53,6 @@ def get_data():
 @app.route('/s') 
 def secondary():
     return render_template('secondary.html') # Open the secondary.html file as a template (in this case it is just a fully formed site with no python changable data)
-
-@app.route('/settings', methods=['POST'])
-def settings():
-    return ('', 204)
 
 if __name__ == '__main__':
     app.run()
