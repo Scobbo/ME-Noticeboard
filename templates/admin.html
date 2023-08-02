@@ -2,7 +2,7 @@
 <!-- Written by Robert Coleman -->
 <html>
 <head>
-    <title>Helpdesk Noticeboard</title>
+    <title>Noticeboard Admin Panel</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"> <!-- Stuff to make browsers understand what is going on -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script> <!-- Get the jquery libraries because it is good -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- remove any border -->
@@ -10,7 +10,6 @@
     <link rel="stylesheet" type="text/css" href="/static/style.css"> <!-- Make it look the way I want -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" /> <!-- Icons from Google -->
     <script type="text/javascript" src="/static/noticeboard.js" async></script> <!-- The thing that makes it all work -->
 </head>
     <body>
@@ -19,14 +18,14 @@
                 <div class="logo"><img id="logo" src="/static/logo.png" alt="Logo"></div><!-- Emmaus Logo -->
                 <div class="time"><p id="date">5 March</p></br><p id="clock">12:34</p></div><!-- A clock -->
             </div>
-            <div class="title">Middle School Collections</div>
-            <div class="grid-container" id="Middle-Collection"></div>
-            <div class="title">Senior School Collections</div>
-            <div class="grid-container" id="Senior-Collection"></div>
-            <div class="title">These students please contact Ms James or Mr Davies</div>
-            <div class="grid-container" id="Middle-Approval"></div>
-            <div class="title">These students please contact Mr Smith or Mrs Johnson</div>
-            <div class="grid-container" id="Senior-Approval"></div>
+            <div class="title">Settings</div>
+            <div class="grid-list clearfix" id="settings-list">
+                <form action="{{ url_for('settings') }}" method="post">
+                <div class="grid-item" id="helpdesk-url-itme"><label for="helpdesk-url">Helpdesk URL:</label><input type="text" id="helpdesk-url" name="helpdesk-url"></div>
+                <div class="grid-item" id="api-key-item"><label for="api-key">API Key:</label><input type="text" id="api-key" name="api-key"></div>
+                <div class="grid-item" id="submit-button"><input type="submit" value="Save"></div>
+                </form>
+            </div>
         </div>
     </body>
 </html>
