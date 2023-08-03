@@ -1,4 +1,4 @@
-from flask import Flask, render_template # Flask libraries
+from flask import Flask, render_template, request, redirect # Flask libraries
 import os.path # Library for manipulating local files and folders
 import requests # Requests library for handling the API request
 import configparser # Library for writing and reading configuration files
@@ -19,13 +19,16 @@ def writeConfig():
     with open("config.ini", "w") as configfile:
         config.write(configfile)
 
-def updateConfig():
-    config.set("INSTANCE", "Key", meKey)
-    config.set("INSTANCE", "Url", meUrl)
+def updateConfig(isKeySet, isUrlSet):
+    if(isKeySet):
+        config.set("INSTANCE", "Key", meKey)
+    if(isUrlSet):
+        config.set("INSTANCE", "Url", meUrl)
     with open("config.ini", "w") as configfile:
         config.write(configfile)
 
 def readConfig():
+    global meKey, meUrl
     config.read("config.ini")
     meKey = config.get("INSTANCE", "Key")
     meUrl = config.get("INSTANCE", "Url")
@@ -88,9 +91,15 @@ def get_data():
 def secondary():
     return render_template('secondary.html') # Open the secondary.html file as a template (in this case it is just a fully formed site with no python changable data)
 
-@app.route('/settings', methods=['POST']) #enty point for the settings form submission target
+@app.route('/settings', methods=["GET", "POST"]) #enty point for the settings form submission target
 def settings():
-    return ('', 204)
+    global meKey, meUrl
+    if request.method == "POST":
+        # Get details from form
+        meKey = request.form.get("api-key")
+        meUrl = request.form.get("helpdesk-url")
+        updateConfig(meKey, meUrl)
+    return redirect("/")
 
 if __name__ == '__main__':
     app.run()
