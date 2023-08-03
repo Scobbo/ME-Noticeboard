@@ -11,9 +11,6 @@ let senCollectionData = "";
 let midApprovalData = "";
 let senApprovalData = "";
 
-// Same as above, but for the information at the bottom of the screen.
-let infoArray = new Array;
-
 // After the page is fully loaded, start all the functions.
 $(document).ready(function() {
 	startApp();
@@ -36,18 +33,13 @@ function updateClock() {
 	setTimeout(updateClock, 1000); // do it all again in 1000 milliseconds.
 }
 
-// Populate the tables with the data from getData()
-async function populate(data) {
-	clearData(); // Clear the data so that each item isn't added several times
-	for (const item of data.requests) { // Loop through all of the jobs
-		if (item.approval_status != null) {
-			makeItem(item.site.name, item.status.name, item.requester.name, item.id, item.approval_status.name); // Send the data to be written into the correct grid
-		}
-		else {
-			makeItem(item.site.name, item.status.name, item.requester.name, item.id, null); // Send the data to be written into the correct grid
-		}
-	}
-	updateData(); // After the jobs are written (as html) to the variables, write them into the grid
+// Get the data from helpdesk using fetch()
+function getData() {
+	fetch('/get-data') // Call the "get-data" function on the serverside python script
+		.then(response => response.json()) // Take the full response and store it in an object in a json structure
+		.then(data => populate(data))
+		.catch(error => console.error(error)); // Log any errors to the console
+	setTimeout(getData, 10000) // Do it all again in 10 seconds
 }
 
 // Populate the tables with the data from getData()
@@ -78,6 +70,9 @@ function makeItem(campus, type, name, id, approval) { // Add the job's informati
 			break;
 		case "Rejected":
 			icon = "<span class='material-symbols-outlined'>close</span>";
+			break;
+		default:
+			icon = "";
 			break;
 	}
 	// Check the site and status and then add to the data to that list as a div in html format

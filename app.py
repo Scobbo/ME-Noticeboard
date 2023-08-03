@@ -8,35 +8,64 @@ print('Content-Type: text/plain') # Headers for it to work
 app = Flask(__name__)
 
 config = configparser.ConfigParser()
-meKey = ''
-meUrl = ''
+meKey = "" # Manage Engine API Key
+meUrl = "" # Manage Engine URL
+primaryCampus = "Primary" # Name of primary campus.
+secondaryCampus = "Secondary" # Name of secondary campus.
+collectionName = "Collection" # Name of collection status in helpdesk.
+approvalName = "Leadership" # Name of approval status in helpdesk.
 
 def writeConfig():
     config["INSTANCE"] = {
         "Key": meKey,
-        "Url": meUrl
+        "Url": meUrl,
+        "PrimaryCampus": primaryCampus,
+        "SecondaryCampus": secondaryCampus,
+        "CollectionName": collectionName,
+        "ApprovalName": approvalName
     }
     with open("config.ini", "w") as configfile:
         config.write(configfile)
 
-def updateConfig(isKeySet, isUrlSet):
+def updateConfig(isKeySet, isUrlSet, isPrimarySet, isSecondarySet, isCollectionSet, isApprovalSet):
     if(isKeySet):
         config.set("INSTANCE", "Key", meKey)
     if(isUrlSet):
         config.set("INSTANCE", "Url", meUrl)
+    if(isPrimarySet):
+        config.set("INSTANCE", "Key", primaryCampus)
+    if(isSecondarySet):
+        config.set("INSTANCE", "Url", secondaryCampus)
+    if(isCollectionSet):
+        config.set("INSTANCE", "Key", collectionName)
+    if(isApprovalSet):
+        config.set("INSTANCE", "Url", approvalName)
     with open("config.ini", "w") as configfile:
         config.write(configfile)
 
 def readConfig():
-    global meKey, meUrl
+    global meKey, meUrl, primaryCampus, secondaryCampus, collectionName, approvalName
     config.read("config.ini")
     meKey = config.get("INSTANCE", "Key")
     meUrl = config.get("INSTANCE", "Url")
+    primaryCampus = config.get("INSTANCE", "PrimaryCampus")
+    secondaryCampus = config.get("INSTANCE", "SecondaryCampus")
+    collectionName = config.get("INSTANCE", "CollectionName")
+    approvalName = config.get("INSTANCE", "ApprovalName")
 
-if not os.path.exists('config.ini'):
-    writeConfig()
-else:
-    readConfig()
+def checkConfig():
+    if not os.path.exists('config.ini'):
+        writeConfig()
+        return
+    else:
+        config.read("config.ini")
+        keys = ("Key", "Url", "PrimaryCampus", "SecondaryCampus", "CollectionName", "ApprovalName")
+        for i in keys:
+            try:
+                keyValue = config.get("INSTANCE", i)
+            except configparser.NoOptionError:
+                writeConfig()
+        return readConfig()
 
 @app.route('/') # Entry point for default page
 def index():
@@ -49,8 +78,11 @@ def admin():
 @app.route('/get-data') # Instructions for when the javascript calls this to start the API request process
 def get_data():
     url = f"https://{meUrl}/api/v3/requests" # Helpdesk URL for API
+    print(url)
     headers = {"authtoken":meKey, "Content-Type":"text/html"} # Auth Token as a key value pair
+    print(headers)
     # This requests the first 200 jobs orderd by most recent and returns any with status Collection or Leadership. 200 should be enough but can be increased if needed.
+    
     input_data = '''{
         "list_info": {
             "start_index": 1,
@@ -93,13 +125,19 @@ def secondary():
 
 @app.route('/settings', methods=["GET", "POST"]) #enty point for the settings form submission target
 def settings():
-    global meKey, meUrl
+    global meKey, meUrl, primaryCampus, secondaryCampus, collectionName, approvalName
     if request.method == "POST":
         # Get details from form
         meKey = request.form.get("api-key")
         meUrl = request.form.get("helpdesk-url")
-        updateConfig(meKey, meUrl)
+        primaryCampus = request.form.get("primary-campus")
+        secondaryCampus = request.form.get("secondary-campus")
+        collectionName = request.form.get("primary-campus")
+        approvalName = request.form.get("secondary-campus")
+        updateConfig(meKey, meUrl, primaryCampus, secondaryCampus, collectionName, approvalName)
     return redirect("/")
+
+checkConfig()
 
 if __name__ == '__main__':
     app.run()

@@ -9,9 +9,6 @@ let approvalName = "Leadership" // Name of approval status in helpdesk.
 let senCollectionData = "";
 let senApprovalData = "";
 
-// Same as above, but for the information at the bottom of the screen.
-let infoArray = new Array;
-
 // After the page is fully loaded, start all the functions.
 $(document).ready(function() {
 	startApp();
@@ -72,6 +69,9 @@ function makeItem(campus, type, name, id, approval) { // Add the job's informati
 		case "Rejected":
 			icon = "<span class='material-symbols-outlined'>close</span>";
 			break;
+		default:
+			icon = "";
+			break;	
 	}
 	// Check the site and status and then add to the data to that list as a div in html format
 	if (campus == primaryCampus) {
