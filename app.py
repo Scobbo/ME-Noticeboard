@@ -1,4 +1,5 @@
 from flask import Flask, render_template, request, redirect # Flask libraries
+from markupsafe import escape
 import os.path # Library for manipulating local files and folders
 import requests # Requests library for handling the API request
 import configparser # Library for writing and reading configuration files
@@ -10,11 +11,12 @@ app = Flask(__name__)
 config = configparser.ConfigParser()
 meKey = "" # Manage Engine API Key
 meUrl = "" # Manage Engine URL
-primaryCampus = "Primary" # Name of primary campus.
-secondaryCampus = "Secondary" # Name of secondary campus.
-collectionName = "Collection" # Name of collection status in helpdesk.
-approvalName = "Leadership" # Name of approval status in helpdesk.
+primaryCampus = "" # Name of primary campus.
+secondaryCampus = "" # Name of secondary campus.
+collectionName = "" # Name of collection status in helpdesk.
+approvalName = "" # Name of approval status in helpdesk.
 
+# Create the config file with blank values
 def writeConfig():
     config["INSTANCE"] = {
         "Key": meKey,
@@ -26,24 +28,50 @@ def writeConfig():
     }
     with open("config.ini", "w") as configfile:
         config.write(configfile)
+    readConfig()
+    return
 
+# Update any keys that have had input from the settings form and use the existing value from the existing config.
 def updateConfig(isKeySet, isUrlSet, isPrimarySet, isSecondarySet, isCollectionSet, isApprovalSet):
     if(isKeySet):
         config.set("INSTANCE", "Key", meKey)
     if(isUrlSet):
         config.set("INSTANCE", "Url", meUrl)
     if(isPrimarySet):
-        config.set("INSTANCE", "Key", primaryCampus)
+        config.set("INSTANCE", "PrimaryCampus", primaryCampus)
     if(isSecondarySet):
-        config.set("INSTANCE", "Url", secondaryCampus)
+        config.set("INSTANCE", "SecondaryCampus", secondaryCampus)
     if(isCollectionSet):
-        config.set("INSTANCE", "Key", collectionName)
+        config.set("INSTANCE", "CollectionName", collectionName)
     if(isApprovalSet):
-        config.set("INSTANCE", "Url", approvalName)
+        config.set("INSTANCE", "ApprovalName", approvalName)
     with open("config.ini", "w") as configfile:
         config.write(configfile)
+    readConfig()
+    return
 
+# Upgrade the config file with the required key-value pairs.
+# Helps with upgrading app version or dealing with incomplete config file.
+def upgradeConfig(isKeySet, isUrlSet, isPrimarySet, isSecondarySet, isCollectionSet, isApprovalSet):
+    if(isKeySet):
+        config.set("INSTANCE", "Key", meKey)
+    if(isUrlSet):
+        config.set("INSTANCE", "Url", meUrl)
+    if(isPrimarySet):
+        config.set("INSTANCE", "PrimaryCampus", primaryCampus)
+    if(isSecondarySet):
+        config.set("INSTANCE", "SecondaryCampus", secondaryCampus)
+    if(isCollectionSet):
+        config.set("INSTANCE", "CollectionName", collectionName)
+    if(isApprovalSet):
+        config.set("INSTANCE", "ApprovalName", approvalName)
+    with open("config.ini", "w") as configfile:
+        config.write(configfile)
+    return
+
+# Read the settings in from the config file and sets the variables in the app.
 def readConfig():
+    print("readConfig was called")
     global meKey, meUrl, primaryCampus, secondaryCampus, collectionName, approvalName
     config.read("config.ini")
     meKey = config.get("INSTANCE", "Key")
@@ -52,20 +80,35 @@ def readConfig():
     secondaryCampus = config.get("INSTANCE", "SecondaryCampus")
     collectionName = config.get("INSTANCE", "CollectionName")
     approvalName = config.get("INSTANCE", "ApprovalName")
+    return
 
+# Checks the config file to see if it exists and has the appropriate keys.
 def checkConfig():
+    print("checkConfig was called")
+    # If config file doens't exist, make it with blank variables so the app can run.
     if not os.path.exists('config.ini'):
         writeConfig()
         return
     else:
+        # If it does exist, make sure all of the required keys are present.
         config.read("config.ini")
         keys = ("Key", "Url", "PrimaryCampus", "SecondaryCampus", "CollectionName", "ApprovalName")
-        for i in keys:
-            try:
-                keyValue = config.get("INSTANCE", i)
-            except configparser.NoOptionError:
-                writeConfig()
-        return readConfig()
+        key = [False] * 6
+        count = 0
+        for i in keys: # For all of the keys (in this version)
+            try: # try to get the key's value, if there is a value in the config, the the write flag to false then increment the array pointer.
+                config.get("INSTANCE", i)
+                key[count] = False
+                count += 1
+            except configparser.NoOptionError: # If the key doesn't exist in the config, set the write flag to true and increment the array pointer.
+                key[count] = True
+                count += 1
+        upgradeConfig(key[0], key[1], key[2], key[3], key[4], key[5]) # Run the upgrade function with the flags set by the above loop. This should only write new keys.
+        return
+    
+def startup():
+    checkConfig()
+    readConfig()
 
 @app.route('/') # Entry point for default page
 def index():
@@ -77,12 +120,9 @@ def admin():
 
 @app.route('/get-data') # Instructions for when the javascript calls this to start the API request process
 def get_data():
-    url = f"https://{meUrl}/api/v3/requests" # Helpdesk URL for API
-    print(url)
+    url = f"{meUrl}/api/v3/requests" # Helpdesk URL for API
     headers = {"authtoken":meKey, "Content-Type":"text/html"} # Auth Token as a key value pair
-    print(headers)
     # This requests the first 200 jobs orderd by most recent and returns any with status Collection or Leadership. 200 should be enough but can be increased if needed.
-    
     input_data = '''{
         "list_info": {
             "start_index": 1,
@@ -128,16 +168,15 @@ def settings():
     global meKey, meUrl, primaryCampus, secondaryCampus, collectionName, approvalName
     if request.method == "POST":
         # Get details from form
-        meKey = request.form.get("api-key")
-        meUrl = request.form.get("helpdesk-url")
-        primaryCampus = request.form.get("primary-campus")
-        secondaryCampus = request.form.get("secondary-campus")
-        collectionName = request.form.get("primary-campus")
-        approvalName = request.form.get("secondary-campus")
+        meKey = escape(request.form.get("api-key"))
+        meUrl = escape(request.form.get("helpdesk-url"))
+        primaryCampus = escape(request.form.get("primary-campus"))
+        secondaryCampus = escape(request.form.get("secondary-campus"))
+        collectionName = escape(request.form.get("collection-name"))
+        approvalName = escape(request.form.get("approval-name"))
         updateConfig(meKey, meUrl, primaryCampus, secondaryCampus, collectionName, approvalName)
     return redirect("/")
 
-checkConfig()
-
 if __name__ == '__main__':
+    startup()
     app.run()

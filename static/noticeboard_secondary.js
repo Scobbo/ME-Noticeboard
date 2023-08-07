@@ -57,9 +57,6 @@ async function populate(data) {
 function makeItem(campus, type, name, id, approval) { // Add the job's information to the correct list
 	let icon = "";
 	switch (approval) { // Set the Material icon based on the approval status.
-		case "null":
-			icon = "";
-			break;
 		case "Approved":
 			icon = "<span class='material-symbols-outlined'>done</span>";
 			break;

@@ -19,14 +19,14 @@
                 <div class="time"><p id="date">5 March</p></br><p id="clock">12:34</p></div><!-- A clock -->
             </div>
             <div class="title">Settings</div>
-            <div class="grid-list clearfix" id="settings-list">
+            <div class="grid-list" id="settings-list">
                 <form action="{{ url_for('settings') }}" method="post">
                 <div class="grid-item" id="helpdesk-url-item"><label for="helpdesk-url">Helpdesk URL:</label><input type="text" id="helpdesk-url" name="helpdesk-url"></div>
-                <div class="grid-item" id="api-key-item"><label for="api-key">API Key:</label><input type="text" id="api-key" name="api-key"></div>
-                <div class="grid-item" id="primary-campus-item"><label for="primary-campus">Helpdesk URL:</label><input type="text" id="primary-campus" name="primary-campus"></div>
-                <div class="grid-item" id="secondary-campus-item"><label for="secondary-campus">API Key:</label><input type="text" id="secondary-campus" name="secondary-campus"></div>
-                <div class="grid-item" id="collection-name-item"><label for="collection-name">Helpdesk URL:</label><input type="text" id="collection-name" name="collection-name"></div>
-                <div class="grid-item" id="approval-name-item"><label for="approval-name">API Key:</label><input type="text" id="approval-name" name="approval-name"></div>
+                <div class="grid-item" id="api-key-item"><label for="api-key">Manage Engine API Key:</label><input type="text" id="api-key" name="api-key"></div>
+                <div class="grid-item" id="primary-campus-item"><label for="primary-campus">Primary Campus Name:</label><input type="text" id="primary-campus" name="primary-campus"></div>
+                <div class="grid-item" id="secondary-campus-item"><label for="secondary-campus">Secondary Campus Name:</label><input type="text" id="secondary-campus" name="secondary-campus"></div>
+                <div class="grid-item" id="collection-name-item"><label for="collection-name">Collection Status Name:</label><input type="text" id="collection-name" name="collection-name"></div>
+                <div class="grid-item" id="approval-name-item"><label for="approval-name">Approval Status Name:</label><input type="text" id="approval-name" name="approval-name"></div>
                 <div class="grid-item" id="submit-button"><input type="submit" value="Save"></div>
                 </form>
             </div>
