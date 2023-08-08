@@ -16,6 +16,23 @@ $(document).ready(function () {
 function startApp() {
 	updateClock();
 	getData();
+	getData();
+}
+
+function getNames() {
+	fetch('/get-names')
+	.then(response => response.json())
+	.then(data => setNames(data))
+	.catch(error => console.error(error));
+	return
+}
+
+function setNames(data) {
+	primaryCampus = data.primary;
+	secondaryCampus = data.secondary;
+	collectionName = data.collection;
+	approvalName = data.approval;
+	return
 }
 
 // The clock at the top right

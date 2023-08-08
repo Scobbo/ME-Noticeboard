@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect # Flask libraries
+from flask import Flask, render_template, request, redirect, jsonify # Flask libraries
 from markupsafe import escape
 import os.path # Library for manipulating local files and folders
 import requests # Requests library for handling the API request
@@ -162,6 +162,14 @@ def get_data():
 @app.route('/s') 
 def secondary():
     return render_template('secondary.html') # Open the secondary.html file as a template (in this case it is just a fully formed site with no python changable data)
+
+@app.route('/get-names')
+def get_names():
+    global primaryCampus, secondaryCampus, collectionName, approvalName
+    return jsonify(primary = primaryCampus,
+                   secondary = secondaryCampus,
+                   collection = collectionName,
+                   approval = approvalName)
 
 @app.route('/settings', methods=["GET", "POST"]) #enty point for the settings form submission target
 def settings():
