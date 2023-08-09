@@ -14,7 +14,9 @@ $(document).ready(function () {
 
 // Start all the functions required to run the page.
 function startApp() {
-	updateClock();
+	$.getScript("static/clock.js", function() {
+		updateClock();
+	});
 	getData();
 	getData();
 }

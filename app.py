@@ -109,6 +109,7 @@ def checkConfig():
 def startup():
     checkConfig()
     readConfig()
+    return
 
 @app.route('/') # Entry point for default page
 def index():
@@ -158,7 +159,7 @@ def get_data():
     return response.text # Return the response as a plain text to the calling function
 
 # Entry point for secondary campus if information is to be displayed is different. If you don't need an alternative version this function can be removed
-# The argument ('/m') can be changed to whatever path you like i.e: ('/alt') which would make the URL to get to this version "https://subdomain.schooldomain.tld/alt"
+# The argument ('/s') can be changed to whatever path you like i.e: ('/alt') which would make the URL to get to this version "https://subdomain.schooldomain.tld/alt"
 @app.route('/s') 
 def secondary():
     return render_template('secondary.html') # Open the secondary.html file as a template (in this case it is just a fully formed site with no python changable data)

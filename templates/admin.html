@@ -10,7 +10,7 @@
     <link rel="stylesheet" type="text/css" href="/static/style.css"> <!-- Make it look the way I want -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <script type="text/javascript" src="/static/noticeboard.js" async></script> <!-- The thing that makes it all work -->
+    <script type="text/javascript" src="/static/admin.js" async></script> <!-- The thing that makes it all work -->
 </head>
     <body>
         <div class="panel" id="panel">
@@ -21,12 +21,12 @@
             <div class="title">Settings</div>
             <div class="grid-list" id="settings-list">
                 <form action="{{ url_for('settings') }}" method="post">
-                <div class="grid-item" id="helpdesk-url-item"><label for="helpdesk-url">Helpdesk URL:</label><input type="text" id="helpdesk-url" name="helpdesk-url"></div>
-                <div class="grid-item" id="api-key-item"><label for="api-key">Manage Engine API Key:</label><input type="text" id="api-key" name="api-key"></div>
-                <div class="grid-item" id="primary-campus-item"><label for="primary-campus">Primary Campus Name:</label><input type="text" id="primary-campus" name="primary-campus"></div>
-                <div class="grid-item" id="secondary-campus-item"><label for="secondary-campus">Secondary Campus Name:</label><input type="text" id="secondary-campus" name="secondary-campus"></div>
-                <div class="grid-item" id="collection-name-item"><label for="collection-name">Collection Status Name:</label><input type="text" id="collection-name" name="collection-name"></div>
-                <div class="grid-item" id="approval-name-item"><label for="approval-name">Approval Status Name:</label><input type="text" id="approval-name" name="approval-name"></div>
+                <div class="grid-item" id="helpdesk-url-item"><label for="helpdesk-url" class="tooltip">Helpdesk URL:<span class="tooltiptext">The URL of the helpdesk including "Https://". Do not include the path.</span></label><input type="text" id="helpdesk-url" name="helpdesk-url"></div>
+                <div class="grid-item" id="api-key-item"><label for="api-key"class="tooltip">Manage Engine API Key:<span class="tooltiptext">The API key that was generated from within Service Desk Plus</span></label><input type="text" id="api-key" name="api-key"></div>
+                <div class="grid-item" id="primary-campus-item"><label for="primary-campus"class="tooltip">Primary Campus Name:<span class="tooltiptext">The name of the Primary Campus as known by Service Desk Plus</span></label><input type="text" id="primary-campus" name="primary-campus"></div>
+                <div class="grid-item" id="secondary-campus-item"><label for="secondary-campus"class="tooltip">Secondary Campus Name:<span class="tooltiptext">The name of the Secondary Campus as known by Service Desk Plus</span></label><input type="text" id="secondary-campus" name="secondary-campus"></div>
+                <div class="grid-item" id="collection-name-item"><label for="collection-name"class="tooltip">Collection Status Name:<span class="tooltiptext">The name of the collection status as known by Service Desk Plus</span></label><input type="text" id="collection-name" name="collection-name"></div>
+                <div class="grid-item" id="approval-name-item"><label for="approval-name"class="tooltip">Approval Status Name:<span class="tooltiptext">The name of the Waiting on approval status as known by Service Desk Plus</span></label><input type="text" id="approval-name" name="approval-name"></div>
                 <div class="grid-item" id="submit-button"><input type="submit" value="Save"></div>
                 </form>
             </div>

@@ -28,12 +28,12 @@ html {
 }
 
 .grid-list {
+	position: relative;
 	min-height: 3.5rem;
 	display: grid;
 	grid-gap: 10% 0.5%;
 	grid-template-columns: 100%;
-	margin: .5% 0%;
-	overflow: hidden;
+	margin: .5% 0% 1.1%;
 }
 
 .grid-item {
@@ -131,8 +131,18 @@ input[type=submit]:hover {
 		'opsz' 48
 }
 
-.clearfix::after {
-	content: "";
-	clear: both;
-	display: table;
-  }
+.tooltip .tooltiptext{
+	visibility: hidden;
+	font-size: 1rem;
+	width: 300px;
+	background-color: black;
+	color: #ccc;
+	text-align: center;
+	padding: 0.1rem, 0;
+	position: absolute;
+	z-index: 1;
+}
+
+.tooltip:hover .tooltiptext {
+	visibility: visible;
+}
