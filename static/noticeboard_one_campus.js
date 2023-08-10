@@ -1,7 +1,7 @@
 "use strict";
 
-let collectionName = "Collection" // Name of collection status in helpdesk.
-let approvalName = "Leadership" // Name of approval status in helpdesk.
+let collectionName = "Collection"; // Name of collection status in helpdesk.
+let approvalName = "Leadership"; // Name of approval status in helpdesk.
 
 // Set up some empty variables for the list of jobs (as HTML divs) are put in. This needs to be global for all the relevant functons to access.
 let CollectionData = "";
@@ -19,6 +19,7 @@ function startApp() {
 	});
 	getData();
 	getData();
+	return;
 }
 
 function getNames() {
@@ -26,7 +27,7 @@ function getNames() {
 	.then(response => response.json())
 	.then(data => setNames(data))
 	.catch(error => console.error(error));
-	return
+	return;
 }
 
 function setNames(data) {
@@ -34,18 +35,7 @@ function setNames(data) {
 	secondaryCampus = data.secondary;
 	collectionName = data.collection;
 	approvalName = data.approval;
-	return
-}
-
-// The clock at the top right
-function updateClock() {
-	var d = new Date(); // Get the date (from the system clock).
-	var s = ""; // Var to write a time into in a human readable format.
-	s += ((d.getHours() + 11) % 12 + 1) + ":"; // Get just the hours, add 11 and devide all that by 12. Take what is left over and add one. This converts 24hr time to 12hr time. Don't worry I did the math, it checks out.
-	s += (10 > d.getMinutes() ? "0" : "") + d.getMinutes(); // Get the minutes and make it always display a leading zero.
-	$("#clock").text(s); //bMake the clock element display the time we just formatted.
-	$("#date").text(d.toDateString()); // Make the date element display the date we just formatted.
-	setTimeout(updateClock, 1000); // do it all again in 1000 milliseconds.
+	return;
 }
 
 // Get the data from helpdesk using fetch()
@@ -54,7 +44,7 @@ function getData() {
 		.then(response => response.json()) // Take the full response and store it in an object in a json structure
 		.then(data => populate(data))
 		.catch(error => console.error(error)); // Log any errors to the console
-	setTimeout(getData, 10000) // Do it all again in 10 seconds
+	setTimeout(getData, 10000); // Do it all again in 10 seconds
 }
 
 // Populate the tables with the data from getData()
