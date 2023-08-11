@@ -1,9 +1,9 @@
 "use strict";
 
-let primaryCampus = "Primary"; // Name of primary campus.
-let secondaryCampus = "Secondary"; // Name of secondary campus.
-let collectionName = "Collection"; // Name of collection status in helpdesk.
-let approvalName = "Leadership"; // Name of approval status in helpdesk.
+let primaryCampus = ""; // Name of primary campus.
+let secondaryCampus = ""; // Name of secondary campus.
+let collectionName = ""; // Name of collection status in helpdesk.
+let approvalName = ""; // Name of approval status in helpdesk.
 
 // Set up some empty variables for the list of jobs (as HTML divs) are put in. This needs to be global for all the relevant functons to access.
 let midCollectionData = "";
@@ -46,7 +46,7 @@ function setNames(data) {
 function getData() {
 	fetch('/get-data') // Call the "get-data" function on the serverside python script
 		.then(response => response.json()) // Take the full response and store it in an object in a json structure
-		.then(data => console.log(data))
+		.then(data => populate(data))
 		.catch(error => console.error(error)); // Log any errors to the console
 	setTimeout(getData, 10000); // Do it all again in 10 seconds
 }

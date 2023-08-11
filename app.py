@@ -71,7 +71,6 @@ def upgradeConfig(isKeySet, isUrlSet, isPrimarySet, isSecondarySet, isCollection
 
 # Read the settings in from the config file and sets the variables in the app.
 def readConfig():
-    print("readConfig was called")
     global meKey, meUrl, primaryCampus, secondaryCampus, collectionName, approvalName
     config.read("config.ini")
     meKey = config.get("INSTANCE", "Key")
@@ -84,7 +83,6 @@ def readConfig():
 
 # Checks the config file to see if it exists and has the appropriate keys.
 def checkConfig():
-    print("checkConfig was called")
     # If config file doens't exist, make it with blank variables so the app can run.
     if not os.path.exists('config.ini'):
         writeConfig()
